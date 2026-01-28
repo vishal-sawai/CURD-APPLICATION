@@ -17,4 +17,13 @@ export interface Stats {
     profitLoss: number;
     timeHeld: number;
   }
+
+  export interface InvestmentFormData {
+    name: string;
+    type: 'stock' | 'crypto' | 'mutual_fund' | 'etf' | 'fd' | 'bonds' | 'real_estate' | 'other';
+    quantity: string;
+    buyPrice: string;
+    currentPrice: string;
+    buyDate: string;
+  }
   

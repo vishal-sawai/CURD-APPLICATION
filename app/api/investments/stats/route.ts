@@ -1,46 +1,49 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../../auth/[...nextauth]/route';
+import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import Investment from '@/models/Investment';
+import {
+  getAuthenticatedUserId,
+  createUnauthorizedResponse,
+  createErrorResponse,
+  calculateInvestmentFields,
+} from '@/lib/api-utils';
 
 // GET dashboard statistics
 export async function GET() {
   try {
-    const session = await getServerSession(authOptions);
-
-    if (!session?.user?.id) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const userId = await getAuthenticatedUserId();
+    if (!userId) {
+      return createUnauthorizedResponse();
     }
 
     await connectDB();
 
-    const investments = await Investment.find({ userId: session.user.id }).lean();
+    const investments = await Investment.find({ userId }).lean();
 
-    // Calculate totals
-    let totalInvested = 0;
-    let totalCurrent = 0;
+    // Calculate totals efficiently
+    const totals = investments.reduce(
+      (acc, inv) => {
+        const calculations = calculateInvestmentFields(
+          inv.buyPrice,
+          inv.quantity,
+          inv.currentPrice,
+          inv.buyDate
+        );
+        acc.totalInvested += calculations.investedValue;
+        acc.totalCurrent += calculations.currentValue;
+        return acc;
+      },
+      { totalInvested: 0, totalCurrent: 0 }
+    );
 
-    investments.forEach((inv) => {
-      const investedValue = inv.buyPrice * inv.quantity;
-      const currentValue = inv.currentPrice ? inv.currentPrice * inv.quantity : 0;
-      totalInvested += investedValue;
-      totalCurrent += currentValue;
-    });
-
-    const overallProfitLoss = totalCurrent - totalInvested;
+    const overallProfitLoss = totals.totalCurrent - totals.totalInvested;
 
     return NextResponse.json({
-      totalInvested,
-      totalCurrent,
+      totalInvested: totals.totalInvested,
+      totalCurrent: totals.totalCurrent,
       overallProfitLoss,
     });
   } catch (error) {
-    console.error('Get stats error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Failed to fetch statistics';
-    return NextResponse.json(
-      { error: errorMessage },
-      { status: 500 }
-    );
+    return createErrorResponse(error, 'Failed to fetch statistics');
   }
 }

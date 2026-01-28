@@ -82,10 +82,10 @@ export default function DashboardPage() {
   }
 
   const typeChartData = Object.values(typeDistribution(investments));
+  // For recent investments (by date added):
   const topInvestments = [...investments]
-    .sort((a, b) => b.investedValue - a.investedValue)
+    .sort((a, b) => new Date(b.buyDate as string).getTime() - new Date(a.buyDate as string).getTime())
     .slice(0, 5);
-
 
 
 

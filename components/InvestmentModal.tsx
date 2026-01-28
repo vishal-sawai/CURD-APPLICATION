@@ -1,16 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { formatNumber } from '@/lib/utils';
+import { InvestmentFormData } from '@/types/comman.interface';
 
-interface InvestmentFormData {
-  name: string;
-  type: 'stock' | 'crypto' | 'mutual_fund' | 'etf' | 'fd' | 'bonds' | 'real_estate' | 'other';
-  quantity: string;
-  buyPrice: string;
-  currentPrice: string;
-  buyDate: string;
-}
 
 interface InvestmentModalProps {
   isOpen: boolean;
@@ -73,8 +65,8 @@ export default function InvestmentModal({
         currentPrice: investment.currentPrice ? investment.currentPrice.toString() : '',
         buyDate: new Date(investment.buyDate).toISOString().split('T')[0],
       });
-    } catch (err: any) {
-      setError(err.message || 'Failed to load investment');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load investment');
     } finally {
       setFetching(false);
     }
@@ -83,7 +75,7 @@ export default function InvestmentModal({
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target as { name: string; value: string };
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
@@ -121,8 +113,8 @@ export default function InvestmentModal({
 
       onSuccess();
       onClose();
-    } catch (err: any) {
-      setError(err.message || 'An error occurred');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
       setLoading(false);
     }

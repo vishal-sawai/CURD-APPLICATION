@@ -14,7 +14,7 @@ interface SidebarNavigationProps {
 
 export default function SidebarNavigation({ navItems, isActive, onLinkClick }: SidebarNavigationProps) {
   return (
-    <nav className="flex-1 px-4 overflow-y-auto ">
+    <nav className="flex-1 px-4 py-2 overflow-y-auto ">
 
       <ul className="space-y-2">
         {navItems.map((item) => (

@@ -2,6 +2,7 @@ import { formatNumber } from '@/lib/utils';
 import { Investment } from '@/types/comman.interface';
 
 export default function RecentInvestment({ topInvestments }: { topInvestments: Investment[] }) {
+
     return (
         <div className="bg-white rounded-2xl shadow-lg p-4">
             <div className="items-center mb-4">
