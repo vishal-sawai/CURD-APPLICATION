@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 
+
 export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json();
@@ -44,10 +45,11 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error) {
     console.error('Registration error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to register user';
     return NextResponse.json(
-      { error: error.message || 'Failed to register user' },
+      { error: errorMessage },
       { status: 500 }
     );
   }

@@ -35,10 +35,11 @@ export async function GET() {
       totalCurrent,
       overallProfitLoss,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Get stats error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to fetch statistics';
     return NextResponse.json(
-      { error: error.message || 'Failed to fetch statistics' },
+      { error: errorMessage },
       { status: 500 }
     );
   }

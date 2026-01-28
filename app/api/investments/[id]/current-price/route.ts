@@ -4,6 +4,7 @@ import { authOptions } from '../../../auth/[...nextauth]/route';
 import connectDB from '@/lib/mongodb';
 import Investment from '@/models/Investment';
 import mongoose from 'mongoose';
+import type { UpdateCurrentPriceRequest } from '@/types/api';
 
 // PATCH update only current price
 export async function PATCH(
@@ -23,7 +24,7 @@ export async function PATCH(
       return NextResponse.json({ error: 'Invalid investment ID' }, { status: 400 });
     }
 
-    const body = await request.json();
+    const body = (await request.json()) as Partial<UpdateCurrentPriceRequest>;
     const { currentPrice } = body;
 
     if (currentPrice === undefined || currentPrice === null) {
@@ -33,9 +34,11 @@ export async function PATCH(
       );
     }
 
-    if (currentPrice < 0) {
+    const numCurrentPrice = Number(currentPrice);
+
+    if (isNaN(numCurrentPrice) || numCurrentPrice < 0) {
       return NextResponse.json(
-        { error: 'Current price must be greater than or equal to 0' },
+        { error: 'Current price must be a valid number greater than or equal to 0' },
         { status: 400 }
       );
     }
@@ -48,7 +51,7 @@ export async function PATCH(
         userId: session.user.id,
       },
       {
-        currentPrice: Number(currentPrice),
+        currentPrice: numCurrentPrice,
       },
       { new: true, runValidators: true }
     );
@@ -79,10 +82,11 @@ export async function PATCH(
         timeHeld,
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Update current price error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to update current price';
     return NextResponse.json(
-      { error: error.message || 'Failed to update current price' },
+      { error: errorMessage },
       { status: 500 }
     );
   }

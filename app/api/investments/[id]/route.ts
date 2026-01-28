@@ -4,6 +4,7 @@ import { authOptions } from '../../auth/[...nextauth]/route';
 import connectDB from '@/lib/mongodb';
 import Investment from '@/models/Investment';
 import mongoose from 'mongoose';
+import type { UpdateInvestmentRequest, InvestmentType } from '@/types/api';
 
 // GET single investment
 export async function GET(
@@ -56,10 +57,11 @@ export async function GET(
         timeHeld,
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Get investment error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to fetch investment';
     return NextResponse.json(
-      { error: error.message || 'Failed to fetch investment' },
+      { error: errorMessage },
       { status: 500 }
     );
   }
@@ -83,25 +85,30 @@ export async function PUT(
       return NextResponse.json({ error: 'Invalid investment ID' }, { status: 400 });
     }
 
-    const body = await request.json();
+    const body = (await request.json()) as Partial<UpdateInvestmentRequest>;
     const { name, type, quantity, buyPrice, currentPrice, buyDate } = body;
 
     // Validation
-    if (!name || !type || !quantity || !buyPrice || !buyDate) {
+    if (!name || !type || quantity === undefined || buyPrice === undefined || !buyDate) {
       return NextResponse.json(
         { error: 'Name, type, quantity, buy price, and buy date are required' },
         { status: 400 }
       );
     }
 
-    if (!['stock', 'crypto', 'mutual_fund', 'etf', 'fd', 'bonds', 'real_estate', 'other'].includes(type)) {
+    const validTypes: InvestmentType[] = ['stock', 'crypto', 'mutual_fund', 'etf', 'fd', 'bonds', 'real_estate', 'other'];
+    if (!validTypes.includes(type as InvestmentType)) {
       return NextResponse.json(
         { error: 'Invalid investment type' },
         { status: 400 }
       );
     }
 
-    if (quantity <= 0 || buyPrice < 0 || (currentPrice !== undefined && currentPrice !== null && currentPrice < 0)) {
+    const numQuantity = Number(quantity);
+    const numBuyPrice = Number(buyPrice);
+    const numCurrentPrice = currentPrice !== undefined && currentPrice !== null ? Number(currentPrice) : null;
+
+    if (numQuantity <= 0 || numBuyPrice < 0 || (numCurrentPrice !== null && numCurrentPrice < 0)) {
       return NextResponse.json(
         { error: 'Quantity and prices must be valid positive numbers' },
         { status: 400 }
@@ -116,11 +123,11 @@ export async function PUT(
         userId: session.user.id,
       },
       {
-        name,
-        type,
-        quantity: Number(quantity),
-        buyPrice: Number(buyPrice),
-        currentPrice: currentPrice !== undefined && currentPrice !== null ? Number(currentPrice) : null,
+        name: name.trim(),
+        type: type as InvestmentType,
+        quantity: numQuantity,
+        buyPrice: numBuyPrice,
+        currentPrice: numCurrentPrice,
         buyDate: new Date(buyDate),
       },
       { new: true, runValidators: true }
@@ -152,10 +159,11 @@ export async function PUT(
         timeHeld,
       },
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Update investment error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to update investment';
     return NextResponse.json(
-      { error: error.message || 'Failed to update investment' },
+      { error: errorMessage },
       { status: 500 }
     );
   }
@@ -194,10 +202,11 @@ export async function DELETE(
     }
 
     return NextResponse.json({ message: 'Investment deleted successfully' });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Delete investment error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to delete investment';
     return NextResponse.json(
-      { error: error.message || 'Failed to delete investment' },
+      { error: errorMessage },
       { status: 500 }
     );
   }

@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]/route';
 import connectDB from '@/lib/mongodb';
 import Investment from '@/models/Investment';
+import type { CreateInvestmentRequest, InvestmentType } from '@/types/api';
 
 // GET all investments for the logged-in user
 export async function GET() {
@@ -40,10 +41,11 @@ export async function GET() {
     });
 
     return NextResponse.json({ investments: investmentsWithCalculations });
-  } catch (error: any) {
+  } catch (error) {
     console.error('Get investments error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to fetch investments';
     return NextResponse.json(
-      { error: error.message || 'Failed to fetch investments' },
+      { error: errorMessage },
       { status: 500 }
     );
   }
@@ -58,25 +60,30 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const body = await request.json();
-    const { name, type, quantity, buyPrice, currentPrice, buyDate  } = body;
+    const body = (await request.json()) as Partial<CreateInvestmentRequest>;
+    const { name, type, quantity, buyPrice, currentPrice, buyDate } = body;
 
     // Validation
-    if (!name || !type || !quantity || !buyPrice || !buyDate) {
+    if (!name || !type || quantity === undefined || buyPrice === undefined || !buyDate) {
       return NextResponse.json(
         { error: 'Name, type, quantity, buy price, and buy date are required' },
         { status: 400 }
       );
     }
 
-    if (!['stock', 'crypto', 'mutual_fund', 'etf', 'fd', 'bonds', 'real_estate', 'other'].includes(type)) {
+    const validTypes: InvestmentType[] = ['stock', 'crypto', 'mutual_fund', 'etf', 'fd', 'bonds', 'real_estate', 'other'];
+    if (!validTypes.includes(type as InvestmentType)) {
       return NextResponse.json(
         { error: 'Invalid investment type' },
         { status: 400 }
       );
     }
 
-    if (quantity <= 0 || buyPrice < 0 || (currentPrice !== undefined && currentPrice !== null && currentPrice < 0)) {
+    const numQuantity = Number(quantity);
+    const numBuyPrice = Number(buyPrice);
+    const numCurrentPrice = currentPrice !== undefined && currentPrice !== null ? Number(currentPrice) : null;
+
+    if (numQuantity <= 0 || numBuyPrice < 0 || (numCurrentPrice !== null && numCurrentPrice < 0)) {
       return NextResponse.json(
         { error: 'Quantity and prices must be valid positive numbers' },
         { status: 400 }
@@ -85,18 +92,26 @@ export async function POST(request: NextRequest) {
 
     await connectDB();
 
-    const investmentData: any = {
-      name,
-      type,
-      quantity: Number(quantity),
-      buyPrice: Number(buyPrice),
+    const investmentData: {
+      name: string;
+      type: InvestmentType;
+      quantity: number;
+      buyPrice: number;
+      buyDate: Date;
+      userId: string;
+      currentPrice?: number;
+    } = {
+      name: name.trim(),
+      type: type as InvestmentType,
+      quantity: numQuantity,
+      buyPrice: numBuyPrice,
       buyDate: new Date(buyDate),
       userId: session.user.id,
     };
 
     // Only include currentPrice if it's provided
-    if (currentPrice !== undefined && currentPrice !== null) {
-      investmentData.currentPrice = Number(currentPrice);
+    if (numCurrentPrice !== null && numCurrentPrice !== undefined) {
+      investmentData.currentPrice = numCurrentPrice;
     }
 
     const investment = await Investment.create(investmentData);
@@ -123,10 +138,11 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 }
     );
-  } catch (error: any) {
+  } catch (error) {
     console.error('Create investment error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Failed to create investment';
     return NextResponse.json(
-      { error: error.message || 'Failed to create investment' },
+      { error: errorMessage },
       { status: 500 }
     );
   }
