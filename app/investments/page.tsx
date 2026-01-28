@@ -3,8 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import UpdateCurrentPriceModal from '@/components/UpdateCurrentPriceModal';
+import InvestmentModal from '@/components/InvestmentModal';
 import { formatNumber } from '@/lib/utils';
 
 interface Investment {
@@ -29,7 +29,10 @@ export default function InvestmentsPage() {
   const [error, setError] = useState('');
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [addModalOpen, setAddModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedInvestment, setSelectedInvestment] = useState<Investment | null>(null);
+  const [editingInvestmentId, setEditingInvestmentId] = useState<string | null>(null);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -90,6 +93,15 @@ export default function InvestmentsPage() {
     fetchInvestments();
   };
 
+  const handleEditClick = (investment: Investment) => {
+    setEditingInvestmentId(investment.id);
+    setEditModalOpen(true);
+  };
+
+  const handleInvestmentSuccess = () => {
+    fetchInvestments();
+  };
+
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -108,21 +120,22 @@ export default function InvestmentsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50">
+      <div className="p-6 lg:p-8">
         <div className="flex justify-between items-center mb-8">
           <div>
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              My Investments
-            </h1>
-            <p className="text-gray-600 mt-2">Manage and track all your investments</p>
+            <h1 className="text-3xl font-bold text-gray-900">My Investments</h1>
+            <p className="text-gray-600 mt-1">Manage and track all your investments</p>
           </div>
-          <Link
-            href="/investments/new"
-            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200"
+          <button
+            onClick={() => setAddModalOpen(true)}
+            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white px-6 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200 flex items-center"
           >
-            + Add Investment
-          </Link>
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+            </svg>
+            Add Investment
+          </button>
         </div>
 
         {error && (
@@ -160,7 +173,7 @@ export default function InvestmentsPage() {
             </div>
           </div>
         ) : (
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gradient-to-r from-blue-50 to-indigo-50">
@@ -233,12 +246,12 @@ export default function InvestmentsPage() {
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
                         <div className="flex flex-col space-y-2">
                           <div className="flex space-x-2">
-                            <Link
-                              href={`/investments/${investment.id}/edit`}
+                            <button
+                              onClick={() => handleEditClick(investment)}
                               className="px-3 py-1 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-md text-xs font-medium transition-colors"
                             >
                               Edit
-                            </Link>
+                            </button>
                             <button
                               onClick={() => handleDelete(investment.id)}
                               disabled={deletingId === investment.id}
@@ -274,6 +287,24 @@ export default function InvestmentsPage() {
             investmentId={selectedInvestment.id}
             currentPrice={selectedInvestment.currentPrice}
             onUpdate={handlePriceUpdate}
+          />
+        )}
+
+        <InvestmentModal
+          isOpen={addModalOpen}
+          onClose={() => setAddModalOpen(false)}
+          onSuccess={handleInvestmentSuccess}
+        />
+
+        {editingInvestmentId && (
+          <InvestmentModal
+            isOpen={editModalOpen}
+            onClose={() => {
+              setEditModalOpen(false);
+              setEditingInvestmentId(null);
+            }}
+            investmentId={editingInvestmentId}
+            onSuccess={handleInvestmentSuccess}
           />
         )}
       </div>
