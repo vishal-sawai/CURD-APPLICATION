@@ -36,6 +36,31 @@ export default function RootLayout({
             {children}
           </MainContent>
         </SessionProvider>
+        <footer className="mt-auto py-6 border-t border-gray-200">
+          <div className="container mx-auto px-4 text-center text-sm text-gray-600">
+            <p className="mb-2">
+              <span className="font-semibold">Vishal Sawai</span>
+            </p>
+            <div className="flex justify-center gap-4">
+              <a
+                href="https://github.com/Vishal-Sawai"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-blue-600 transition-colors"
+              >
+                GitHub
+              </a>
+              <a
+                href="https://www.linkedin.com/in/vishal-sawai-5462b9186/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-blue-600 transition-colors"
+              >
+                LinkedIn
+              </a>
+            </div>
+          </div>
+        </footer>
       </body>
     </html>
   );

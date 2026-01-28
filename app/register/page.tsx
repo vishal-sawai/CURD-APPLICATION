@@ -15,7 +15,7 @@ export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const router = useRouter();
-  const { data: session, status } = useSession();
+  const { status } = useSession();
 
   // Redirect to dashboard if already authenticated
   useEffect(() => {
@@ -83,10 +83,10 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className=" flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-5 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
         {/* Logo and Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-2">
           <div className="flex justify-center   ">
             <Logo />
           </div>
@@ -97,7 +97,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Form Card */}
-        <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-6 lg:p-8 border border-gray-100">
+        <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-6 border border-gray-100">
           <form className="space-y-4 sm:space-y-5" onSubmit={handleSubmit}>
             {error && (
               <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-lg flex items-center">
@@ -277,11 +277,6 @@ export default function RegisterPage() {
             </div>
           </form>
         </div>
-
-        {/* Footer */}
-        <p className="mt-8 text-center text-sm text-gray-500">
-          By creating an account, you agree to our Terms of Service
-        </p>
       </div>
     </div>
   );

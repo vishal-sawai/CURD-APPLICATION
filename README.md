@@ -51,32 +51,3 @@ npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-├── app/
-│   ├── api/
-│   │   ├── auth/
-│   │   │   ├── [...nextauth]/route.ts  # NextAuth configuration
-│   │   │   └── register/route.ts       # User registration
-│   │   └── investments/
-│   │       ├── route.ts                 # GET all, POST create
-│   │       ├── [id]/route.ts            # GET, PUT, DELETE by ID
-│   │       └── stats/route.ts           # Dashboard statistics
-│   ├── dashboard/page.tsx               # Dashboard page
-│   ├── investments/
-│   │   ├── page.tsx                     # Investments list
-│   │   ├── new/page.tsx                 # Add investment
-│   │   └── [id]/edit/page.tsx           # Edit investment
-│   ├── login/page.tsx                   # Login page
-│   └── register/page.tsx                # Registration page
-├── components/
-│   ├── InvestmentForm.tsx               # Reusable form component
-│   ├── Navbar.tsx                       # Navigation bar
-│   └── SessionProvider.tsx              # NextAuth session provider
-├── lib/
-│   └── mongodb.ts                       # MongoDB connection utility
-├── models/
-│   ├── User.ts                          # User schema
-│   └── Investment.ts                    # Investment schema
-└── types/
-    └── next-auth.d.ts                   # NextAuth TypeScript types
-```

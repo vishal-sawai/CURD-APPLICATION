@@ -76,10 +76,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className=" py-14 flex items-center justify-center bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50  px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
         {/* Logo and Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-2">
           <div className="flex justify-center">
             <Logo />
           </div>
@@ -90,7 +90,7 @@ export default function LoginPage() {
         </div>
 
         {/* Form Card */}
-        <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-6 lg:p-8 border border-gray-100">
+        <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-6  border border-gray-100">
           <form className="space-y-4 sm:space-y-6" onSubmit={handleSubmit}>
             {success && (
               <div className="bg-green-50 border-l-4 border-green-500 text-green-700 px-4 py-3 rounded-lg flex items-center">
@@ -221,10 +221,6 @@ export default function LoginPage() {
           </form>
         </div>
 
-        {/* Footer */}
-        <p className="mt-8 text-center text-sm text-gray-500">
-          Secure investment tracking platform
-        </p>
       </div>
     </div>
   );

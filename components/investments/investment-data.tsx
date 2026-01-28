@@ -2,7 +2,7 @@ import { Investment } from '@/types/comman.interface';
 import { formatNumber } from '@/lib/utils';
 
 
-export default function InvestmentData({ investments, handleEditClick, handleDelete, handleUpdatePriceClick, deletingId }: { investments: Investment[], handleEditClick: (investment: Investment) => void, handleDelete: (id: string) => void, handleUpdatePriceClick: (investment: Investment) => void, deletingId: string | null }) {
+export default function InvestmentData({ investments, handleEditClick, handleDelete, handleUpdatePriceClick, deletingId }: { investments: Investment[], handleEditClick: (investment: Investment) => void, handleDelete: (investment: Investment) => void, handleUpdatePriceClick: (investment: Investment) => void, deletingId: string | null }) {
     return (
         <>
             {/* Mobile Card View */}
@@ -22,11 +22,11 @@ export default function InvestmentData({ investments, handleEditClick, handleDel
                                     Edit
                                 </button>
                                 <button
-                                    onClick={() => handleDelete(investment.id)}
+                                    onClick={() => handleDelete(investment)}
                                     disabled={deletingId === investment.id}
                                     className="px-2 py-1 bg-red-50 text-red-600 hover:bg-red-100 rounded text-xs font-medium transition-colors disabled:opacity-50 whitespace-nowrap"
                                 >
-                                    {deletingId === investment.id ? 'Deleting...' : 'Delete'}
+                                    Delete
                                 </button>
                             </div>
                         </div>
@@ -153,11 +153,11 @@ export default function InvestmentData({ investments, handleEditClick, handleDel
                                                     Edit
                                                 </button>
                                                 <button
-                                                    onClick={() => handleDelete(investment.id)}
+                                                    onClick={() => handleDelete(investment)}
                                                     disabled={deletingId === investment.id}
                                                     className="px-3 py-1 bg-red-50 text-red-600 hover:bg-red-100 rounded-md text-xs font-medium transition-colors disabled:opacity-50"
                                                 >
-                                                    {deletingId === investment.id ? 'Deleting...' : 'Delete'}
+                                                    Delete
                                                 </button>
                                             </div>
                                             <button
