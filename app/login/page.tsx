@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import Logo from '@/components/Logo';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -14,7 +15,7 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { data: session, status } = useSession();
+  const { status } = useSession();
 
   // Redirect to dashboard if already authenticated
   useEffect(() => {
@@ -79,10 +80,8 @@ export default function LoginPage() {
       <div className="max-w-md w-full">
         {/* Logo and Header */}
         <div className="text-center mb-8">
-          <div className="flex justify-center mb-6">
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 w-20 h-20 rounded-2xl flex items-center justify-center shadow-xl transform hover:scale-105 transition-transform">
-              <span className="text-white font-bold text-3xl">I</span>
-            </div>
+          <div className="flex justify-center">
+            <Logo />
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
             Welcome Back
@@ -203,7 +202,7 @@ export default function LoginPage() {
                 <div className="w-full border-t border-gray-300"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Don't have an account?</span>
+                <span className="px-2 bg-white text-gray-500">Don&apos;t have an account?</span>
               </div>
             </div>
 

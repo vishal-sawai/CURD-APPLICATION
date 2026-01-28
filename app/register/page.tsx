@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Logo from '@/components/Logo';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState('');
@@ -86,10 +87,8 @@ export default function RegisterPage() {
       <div className="max-w-md w-full">
         {/* Logo and Header */}
         <div className="text-center mb-8">
-          <div className="flex justify-center mb-6">
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 w-20 h-20 rounded-2xl flex items-center justify-center shadow-xl transform hover:scale-105 transition-transform">
-              <span className="text-white font-bold text-3xl">I</span>
-            </div>
+          <div className="flex justify-center   ">
+            <Logo />
           </div>
           <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent mb-2">
             Create Account
