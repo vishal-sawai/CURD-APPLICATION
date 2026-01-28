@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SessionProvider from "@/components/SessionProvider";
 import Sidebar from "@/components/Sidebar";
+import MainContent from "@/components/MainContent";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,9 +32,9 @@ export default function RootLayout({
       >
         <SessionProvider>
           <Sidebar />
-          <main className="lg:ml-64">
+          <MainContent>
             {children}
-          </main>
+          </MainContent>
         </SessionProvider>
       </body>
     </html>

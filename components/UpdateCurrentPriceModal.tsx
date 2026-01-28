@@ -63,12 +63,12 @@ export default function UpdateCurrentPriceModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 backdrop-blur-sm">
-      <div className="bg-white rounded-xl shadow-2xl p-8 w-full max-w-md border border-gray-200">
-        <div className="flex items-center mb-6">
-          <div className="bg-green-100 p-3 rounded-full mr-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 backdrop-blur-sm p-2 sm:p-4">
+      <div className="bg-white rounded-xl shadow-2xl p-4 sm:p-6 lg:p-8 w-full max-w-md border border-gray-200 max-h-[95vh] overflow-y-auto">
+        <div className="flex items-center mb-4 sm:mb-6">
+          <div className="bg-green-100 p-2 sm:p-3 rounded-full mr-3 sm:mr-4 flex-shrink-0">
             <svg
-              className="w-6 h-6 text-green-600"
+              className="w-5 h-5 sm:w-6 sm:h-6 text-green-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -81,11 +81,11 @@ export default function UpdateCurrentPriceModal({
               />
             </svg>
           </div>
-          <div>
-            <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+          <div className="min-w-0 flex-1">
+            <h2 className="text-lg sm:text-xl lg:text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               Update Current Price
             </h2>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-xs sm:text-sm text-gray-600 mt-1 truncate">
               Investment: <span className="font-semibold text-gray-900">{investmentName}</span>
             </p>
           </div>
@@ -116,11 +116,11 @@ export default function UpdateCurrentPriceModal({
             />
           </div>
 
-          <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
+          <div className="flex flex-col sm:flex-row justify-end gap-2 sm:gap-3 pt-4 border-t border-gray-200">
             <button
               type="button"
               onClick={onClose}
-              className="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium transition-colors"
+              className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 text-sm sm:text-base font-medium transition-colors"
               disabled={loading}
             >
               Cancel
@@ -128,7 +128,7 @@ export default function UpdateCurrentPriceModal({
             <button
               type="submit"
               disabled={loading}
-              className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg font-medium shadow-lg hover:shadow-xl disabled:opacity-50 transition-all duration-200"
+              className="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white rounded-lg text-sm sm:text-base font-medium shadow-lg hover:shadow-xl disabled:opacity-50 transition-all duration-200"
             >
               {loading ? 'Updating...' : 'Update & Calculate'}
             </button>

@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
 import { formatNumber } from '@/lib/utils';
 
 interface InvestmentFormData {
@@ -26,7 +25,6 @@ export default function InvestmentModal({
   investmentId,
   onSuccess,
 }: InvestmentModalProps) {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(!!investmentId);
   const [error, setError] = useState('');
@@ -133,14 +131,14 @@ export default function InvestmentModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 backdrop-blur-sm p-4">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-6 rounded-t-2xl">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 backdrop-blur-sm p-2 sm:p-4">
+      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-indigo-600 px-4 sm:px-6 lg:px-8 py-4 sm:py-6 rounded-t-2xl">
           <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <div className="bg-white bg-opacity-20 p-3 rounded-full mr-4">
+            <div className="flex items-center flex-1 min-w-0">
+              <div className="bg-white bg-opacity-20 p-2 sm:p-3 rounded-full mr-3 sm:mr-4 flex-shrink-0">
                 <svg
-                  className="w-6 h-6 text-white"
+                  className="w-5 h-5 sm:w-6 sm:h-6 text-white"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -153,11 +151,11 @@ export default function InvestmentModal({
                   />
                 </svg>
               </div>
-              <div>
-                <h2 className="text-2xl font-bold text-white">
+              <div className="min-w-0 flex-1">
+                <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white truncate">
                   {investmentId ? 'Edit Investment' : 'Add New Investment'}
                 </h2>
-                <p className="text-blue-100 text-sm mt-1">
+                <p className="text-blue-100 text-xs sm:text-sm mt-1 hidden sm:block">
                   {investmentId ? 'Update your investment details' : 'Track your new investment'}
                 </p>
               </div>
@@ -178,7 +176,7 @@ export default function InvestmentModal({
           </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-8 space-y-6">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-6">
           {fetching ? (
             <div className="flex items-center justify-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
@@ -191,7 +189,7 @@ export default function InvestmentModal({
                 </div>
               )}
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div className="md:col-span-2">
                   <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
                     Investment Name *

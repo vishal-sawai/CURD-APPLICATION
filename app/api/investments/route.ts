@@ -5,7 +5,7 @@ import connectDB from '@/lib/mongodb';
 import Investment from '@/models/Investment';
 
 // GET all investments for the logged-in user
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions);
 
