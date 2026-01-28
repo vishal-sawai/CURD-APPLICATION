@@ -52,9 +52,6 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Project Structure
-
-```
 ├── app/
 │   ├── api/
 │   │   ├── auth/
@@ -83,66 +80,3 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 └── types/
     └── next-auth.d.ts                   # NextAuth TypeScript types
 ```
-
-## Investment Fields
-
-- **name**: Investment name (e.g., "Apple Inc.", "Bitcoin")
-- **type**: Investment type (stock, crypto, mutual_fund, other)
-- **quantity**: Number of units owned
-- **buyPrice**: Price per unit at purchase
-- **currentPrice**: Current price per unit (manually entered)
-- **buyDate**: Date of purchase
-
-## Calculated Fields
-
-All calculations are performed server-side:
-
-- **investedValue** = buyPrice × quantity
-- **currentValue** = currentPrice × quantity
-- **profitLoss** = currentValue - investedValue
-- **timeHeld** = Days between buyDate and today
-
-## API Routes
-
-### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/[...nextauth]` - NextAuth endpoints (login, logout, session)
-
-### Investments
-- `GET /api/investments` - Get all investments for logged-in user
-- `POST /api/investments` - Create new investment
-- `GET /api/investments/[id]` - Get single investment
-- `PUT /api/investments/[id]` - Update investment
-- `DELETE /api/investments/[id]` - Delete investment
-- `GET /api/investments/stats` - Get dashboard statistics
-
-## Security
-
-- All investment routes require authentication
-- Users can only access their own investments
-- Passwords are hashed using bcrypt
-- Session management via NextAuth.js
-
-## Development
-
-```bash
-# Run development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Start production server
-npm start
-
-# Run linter
-npm run lint
-```
-
-## Notes
-
-- No external market APIs are used - users manually enter current prices
-- Calculations are performed server-side for accuracy
-- Clean, simple UI with Tailwind CSS
-- TypeScript for type safety
-- RESTful API conventions
