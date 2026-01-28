@@ -1,20 +1,35 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { signIn, useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import Logo from '@/components/Logo';
 
+// Component that handles search params (needs Suspense boundary)
+function SuccessMessage() {
+  const searchParams = useSearchParams();
+  const isRegistered = searchParams.get('registered') === 'true';
+
+  if (!isRegistered) return null;
+
+  return (
+    <div className="bg-green-50 border-l-4 border-green-500 text-green-700 px-4 py-3 rounded-lg flex items-center">
+      <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+      </svg>
+      <span className="font-medium">Account created successfully! Please sign in.</span>
+    </div>
+  );
+}
+
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { status } = useSession();
 
   // Redirect to dashboard if already authenticated
@@ -23,15 +38,6 @@ export default function LoginPage() {
       router.push('/dashboard');
     }
   }, [status, router]);
-
-  useEffect(() => {
-    if (searchParams.get('registered') === 'true') {
-      setSuccess('Account created successfully! Please sign in.');
-      // Clear success message after 5 seconds
-      const timer = setTimeout(() => setSuccess(''), 5000);
-      return () => clearTimeout(timer);
-    }
-  }, [searchParams]);
 
   // Show loading if checking authentication
   if (status === 'loading') {
@@ -92,14 +98,9 @@ export default function LoginPage() {
         {/* Form Card */}
         <div className="bg-white rounded-2xl shadow-2xl p-4 sm:p-6  border border-gray-100">
           <form className="space-y-4 sm:space-y-6" onSubmit={handleSubmit}>
-            {success && (
-              <div className="bg-green-50 border-l-4 border-green-500 text-green-700 px-4 py-3 rounded-lg flex items-center">
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <span className="font-medium">{success}</span>
-              </div>
-            )}
+            <Suspense fallback={null}>
+              <SuccessMessage />
+            </Suspense>
             {error && (
               <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-lg flex items-center">
                 <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
